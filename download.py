@@ -35,16 +35,21 @@ async def download_url(url, destination):
 def main():
     # get the URL from the command-line arguments
     parser = argparse.ArgumentParser()
-    parser.add_argument('url', metavar='URL', help='The URL to download')
+    parser.add_argument('url', metavar='URL', nargs='+', help='The URL to download')
     arguments = parser.parse_args()
 
-    # get the filename from the URL
-    url_parts = urlsplit(arguments.url)
-    file_name = url_parts.path[url_parts.path.rfind('/') + 1:]
+    # specify files to download
+    urls = []
+
+    for url in arguments.url:
+        # get the filename from the URL
+        url_parts = urlsplit(url)
+        file_name = url_parts.path[url_parts.path.rfind('/') + 1:]
+        urls.append((url, file_name))
 
     # start the download async
     loop = asyncio.get_event_loop()
-    loop.run_until_complete(download_url(arguments.url, file_name))
+    loop.run_until_complete(asyncio.wait([download_url(url, destination) for url, destination in urls]))
 
 
 if __name__ == '__main__':
