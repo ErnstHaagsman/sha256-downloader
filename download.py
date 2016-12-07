@@ -23,21 +23,13 @@ async def download_url(url, destination):
                         yield chunk
 
                 # handle the download
-                total_bytes = int(response.headers['content-length'])
                 received = 0
                 async for chunk in get_bytes():
                     received += chunk_size
-                    progress(received, total_bytes)
                     file_hash.update(chunk)
                     file.write(chunk)
 
     print(f'\r\nDownloaded {destination}, sha256: {file_hash.hexdigest()}')
-
-
-def progress(downloaded, total):
-    work_done = downloaded / total
-    # inspired by: http://stackoverflow.com/questions/3173320/text-progress-bar-in-the-console
-    print("\rProgress: [{0:50s}] {1:.1f}%".format('#' * int(work_done * 50), work_done * 100), end="", flush=True)
 
 
 def main():
