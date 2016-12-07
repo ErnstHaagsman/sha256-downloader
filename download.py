@@ -5,11 +5,11 @@ from urllib.parse import urlsplit
 
 import aiohttp
 
-chunk_size = 1_024  # Set to 1 KB chunks
+chunk_size = 1024  # Set to 1 KB chunks
 
 
 async def download_url(url, destination):
-    print(f'Downloading {url}')
+    print('Downloading {}'.format(url))
     file_hash = hashlib.sha256()
     with open(destination, 'wb') as file:
         async with aiohttp.ClientSession() as session:
@@ -25,7 +25,7 @@ async def download_url(url, destination):
                     file_hash.update(chunk)
                     file.write(chunk)
 
-    print(f'\r\nDownloaded {destination}, sha256: {file_hash.hexdigest()}')
+    print('\r\nDownloaded {}, sha256: {}'.format(destination, file_hash.hexdigest()))
 
 
 def progress(downloaded, total):
