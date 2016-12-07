@@ -14,12 +14,18 @@ async def download_url(url, destination):
     with open(destination, 'wb') as file:
         async with aiohttp.ClientSession() as session:
             async with session.get(url) as response:
+                # define async generator for getting bytes
+                async def get_bytes():
+                    while True:
+                        chunk = await response.content.read(chunk_size)
+                        if not chunk:
+                            return
+                        yield chunk
+
+                # handle the download
                 total_bytes = int(response.headers['content-length'])
                 received = 0
-                while True:
-                    chunk = await response.content.read(chunk_size)
-                    if not chunk:
-                        break
+                async for chunk in get_bytes():
                     received += chunk_size
                     progress(received, total_bytes)
                     file_hash.update(chunk)
