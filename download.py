@@ -23,7 +23,7 @@ async def download_url(url, destination):
                     file_hash.update(chunk)
                     file.write(chunk)
 
-    print('\r\nDownloaded {}, sha256: {}'.format(destination, file_hash.hexdigest()))
+    print('Downloaded {}, sha256: {}'.format(destination, file_hash.hexdigest()))
 
 
 def main():
