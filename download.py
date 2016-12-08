@@ -14,24 +14,16 @@ async def download_url(url, destination):
     with open(destination, 'wb') as file:
         async with aiohttp.ClientSession() as session:
             async with session.get(url) as response:
-                total_bytes = int(response.headers['content-length'])
                 received = 0
                 while True:
                     chunk = await response.content.read(chunk_size)
                     if not chunk:
                         break
                     received += chunk_size
-                    progress(received, total_bytes)
                     file_hash.update(chunk)
                     file.write(chunk)
 
     print('\r\nDownloaded {}, sha256: {}'.format(destination, file_hash.hexdigest()))
-
-
-def progress(downloaded, total):
-    work_done = downloaded / total
-    # inspired by: http://stackoverflow.com/questions/3173320/text-progress-bar-in-the-console
-    print("\rProgress: [{0:50s}] {1:.1f}%".format('#' * int(work_done * 50), work_done * 100), end="", flush=True)
 
 
 def main():
