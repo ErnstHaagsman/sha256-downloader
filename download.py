@@ -23,9 +23,7 @@ async def download_url(url, destination):
                         yield chunk
 
                 # handle the download
-                received = 0
                 async for chunk in get_bytes():
-                    received += chunk_size
                     file_hash.update(chunk)
                     file.write(chunk)
 
