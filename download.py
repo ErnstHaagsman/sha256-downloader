@@ -14,12 +14,10 @@ async def download_url(url, destination):
     with open(destination, 'wb') as file:
         async with aiohttp.ClientSession() as session:
             async with session.get(url) as response:
-                received = 0
                 while True:
                     chunk = await response.content.read(chunk_size)
                     if not chunk:
                         break
-                    received += chunk_size
                     file_hash.update(chunk)
                     file.write(chunk)
 
